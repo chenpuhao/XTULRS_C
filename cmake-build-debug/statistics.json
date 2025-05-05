@@ -1,0 +1,13 @@
+{
+	"statistics":	[{
+			"room":	1,
+			"seat":	1,
+			"time":	"2025-05-06 00:12:51",
+			"user":	"admin"
+		}, {
+			"room":	101,
+			"seat":	1,
+			"time":	"2025-05-06 00:34:07",
+			"user":	"admin"
+		}]
+}
