@@ -1032,6 +1032,33 @@ __declspec(dllexport) int cancelReservation(Seat** head,const int room, const in
 }
 
 /**
+ * 获取用户信息
+ * @param user 用户指针
+ * @return JSON格式的字符串
+ */
+__declspec(dllexport) char* getUserInfo(User** user) {
+    if (user == NULL || *user == NULL) {
+        return NULL;
+    }
+    const User* temp = *user;
+    cJSON* userObject = cJSON_CreateObject();
+    if (!userObject) {
+        return NULL;
+    }
+    cJSON_AddStringToObject(userObject, "name", temp->name);
+    cJSON_AddStringToObject(userObject, "email", temp->email);
+    cJSON_AddNumberToObject(userObject, "isAdmin", temp->isAdmin);
+    if (temp->seat != NULL) {
+        cJSON_AddStringToObject(userObject, "seat", temp->seat);
+    } else {
+        cJSON_AddNullToObject(userObject, "seat");
+    }
+    char* jsonString = cJSON_PrintUnformatted(userObject);
+    cJSON_Delete(userObject);
+    return jsonString;
+}
+
+/**
  * 测试函数
  * @return 0
  */
