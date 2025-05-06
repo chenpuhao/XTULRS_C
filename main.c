@@ -379,24 +379,32 @@ __declspec(dllexport) int deleteUser(User** user, const char* email, const char*
  * @param email 用户邮箱
  * @return NULL表示未找到或者不是管理员，返回JSON格式的字符串
  */
-    __declspec(dllexport) char* returnAllUser(User** user, const char* email) {
+__declspec(dllexport) char* returnAllUser(User** user, const char* email) {
     if (user == NULL || *user == NULL || email == NULL) {
         return NULL;
     }
+
+    // 验证是否为管理员用户
     const User* current = *user;
     while (current != NULL) {
         if (strcmp(current->email, email) == 0) {
             if (!current->isAdmin) {
-                return NULL;
+                return NULL; // 非管理员用户无权限
             }
             break;
         }
         current = current->next;
     }
+    if (current == NULL) {
+        return NULL; // 未找到指定邮箱的用户
+    }
+
+    // 创建 JSON 数组
     cJSON* usersArray = cJSON_CreateArray();
     if (!usersArray) {
         return NULL;
     }
+
     const User* temp = *user;
     while (temp != NULL) {
         cJSON* userObject = cJSON_CreateObject();
@@ -404,17 +412,23 @@ __declspec(dllexport) int deleteUser(User** user, const char* email, const char*
             cJSON_Delete(usersArray);
             return NULL;
         }
-        cJSON_AddStringToObject(userObject, "name", temp->name);
-        cJSON_AddStringToObject(userObject, "email", temp->email);
+
+        cJSON_AddStringToObject(userObject, "name", temp->name ? temp->name : "");
+        cJSON_AddStringToObject(userObject, "email", temp->email ? temp->email : "");
         cJSON_AddNumberToObject(userObject, "isAdmin", temp->isAdmin);
+        cJSON_AddStringToObject(userObject, "password", temp->password ? temp->password : "");
+        cJSON_AddStringToObject(userObject, "seat", temp->seat ? temp->seat : "");
+
         cJSON_AddItemToArray(usersArray, userObject);
         temp = temp->next;
     }
+
     char* jsonString = cJSON_PrintUnformatted(usersArray);
     cJSON_Delete(usersArray);
     if (!jsonString) {
         return NULL;
     }
+
     return jsonString;
 }
 
