@@ -980,7 +980,7 @@ __declspec(dllexport) User* login(User** user, const char* email, const char* pa
  * @param statistic 统计链表头指针
  * @return 0表示成功，-1表示失败(座位已被预约或用户不存在)
  */
-__declspec(dllexport) int reserveSeat(Seat** head,const int room, const int seat, User* user,Statistic* statistic) {
+__declspec(dllexport) int reserveSeat(Seat** head,const int room, const int seat, User* user,Statistic** statistic) {
     if (user->seat != NULL) {
         return -1;
     }
@@ -996,7 +996,7 @@ __declspec(dllexport) int reserveSeat(Seat** head,const int room, const int seat
                 return -1;
             }
             snprintf(user->seat, 128, "{\"room\":%d,\"seat\":%d}", room, seat);
-            addStatistic(&statistic, room, seat, time(NULL), user->name);
+            addStatistic(statistic, room, seat, time(NULL), user->name);
             return 0;
         }
         temp = temp->next;
@@ -1036,11 +1036,11 @@ __declspec(dllexport) int cancelReservation(Seat** head,const int room, const in
  * @param user 用户指针
  * @return JSON格式的字符串
  */
-__declspec(dllexport) char* getUserInfo(User** user) {
-    if (user == NULL || *user == NULL) {
+__declspec(dllexport) char* getUserInfo(const User* user) {
+    if (user == NULL ) {
         return NULL;
     }
-    const User* temp = *user;
+    const User* temp = user;
     cJSON* userObject = cJSON_CreateObject();
     if (!userObject) {
         return NULL;
