@@ -148,7 +148,7 @@ __declspec(dllexport) char* findSeatByRoom(Seat** head, const int room) {
         }
         temp = temp->next;
     }
-    char* jsonString = cJSON_Print(seatsArray);
+    char* jsonString = cJSON_PrintUnformatted(seatsArray);
     cJSON_Delete(seatsArray);
     if (!jsonString) {
         return NULL;
@@ -185,7 +185,7 @@ __declspec(dllexport) char* findSeatByIsOccupied(Seat** head, const int isOccupi
         }
         temp = temp->next;
     }
-    char* jsonString = cJSON_Print(seatsArray);
+    char* jsonString = cJSON_PrintUnformatted(seatsArray);
     cJSON_Delete(seatsArray);
     if (!jsonString) {
         return NULL;
