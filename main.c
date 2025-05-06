@@ -591,12 +591,12 @@ __declspec(dllexport) int deleteStatistic(Statistic** head, const int room, cons
  * @param user 用户链表头指针
  * @return NULL表示未找到，返回JSON格式的字符串
  */
-__declspec(dllexport) char* returnAllStatistic(Statistic** head, User** user) {
-    if (head == NULL || *head == NULL || user == NULL || *user == NULL) {
+__declspec(dllexport) char* returnAllStatistic(Statistic** head, User* user) {
+    if (head == NULL || *head == NULL || user == NULL) {
         return NULL;
     }
 
-    const User* currentUser = *user;
+    const User* currentUser = user;
     if (!currentUser->isAdmin) {
         return NULL;
     }
@@ -1067,10 +1067,51 @@ __declspec(dllexport) char* getUserInfo(const User* user) {
 }
 
 /**
+ * 将用户设置为管理员
+ * @param user 用户链表头指针
+ * @param email 用户邮箱
+ * @return 0表示成功，-1表示失败(用户不存在或链表为空)
+ */
+__declspec(dllexport) int setAsAdmin(User** user, const char* email) {
+    if (user == NULL || email == NULL) {
+        return -1; // 参数无效
+    }
+    User* temp = *user;
+    while (temp != NULL) {
+        if (strcmp(temp->email, email) == 0) {
+            temp->isAdmin = 1;
+            return 0; // 成功
+        }
+        temp = temp->next;
+    }
+    return -1; // 未找到用户
+}
+
+/**
+ * 将用户设置为普通用户
+ * @param user 用户链表头指针
+ * @param email 用户邮箱
+ * @return 0表示成功，-1表示失败(用户不存在或链表为空)
+ */
+__declspec(dllexport) int setAsUser(User** user, const char* email) {
+    if (user == NULL || email == NULL) {
+        return -1; // 参数无效
+    }
+    User* temp = *user;
+    while (temp != NULL) {
+        if (strcmp(temp->email, email) == 0) {
+            temp->isAdmin = 0;
+            return 0; // 成功
+        }
+        temp = temp->next;
+    }
+    return -1; // 未找到用户
+}
+
+/**
  * 测试函数
  * @return 0
  */
 __declspec(dllexport) int test() {
     return 123;
 }
-
