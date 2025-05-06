@@ -316,13 +316,14 @@ __declspec(dllexport) int addUser(User** user, const char* name, const char* ema
     newUser->email = strdup(email);
     newUser->password = strdup(password);
     newUser->isAdmin = isAdmin;
-    newUser->seat = seat;
+    newUser->seat = strdup(seat);
     newUser->next = NULL;
 
     if (!newUser->name || !newUser->email || !newUser->password) {
         free(newUser->name);
         free(newUser->email);
         free(newUser->password);
+        free(newUser->seat);
         free(newUser);
         return -1;
     }
@@ -881,9 +882,7 @@ __declspec(dllexport) int loadUser(User** user) {
         if (!cJSON_IsString(name) || !cJSON_IsString(email) || !cJSON_IsString(password) || !cJSON_IsNumber(isAdmin)) {
             continue;
         }
-
-        char* seatValue = cJSON_IsString(seat) ? seat->valuestring : NULL;
-        if (addUser(user, name->valuestring, email->valuestring, password->valuestring, isAdmin->valueint, seatValue) == -1) {
+        if (addUser(user, name->valuestring, email->valuestring, password->valuestring, isAdmin->valueint, seat->valuestring) == -1) {
             cJSON_Delete(root);
             return -1;
         }
@@ -995,7 +994,7 @@ __declspec(dllexport) int reserveSeat(Seat** head, const int room, const int sea
             if (!user->seat) {
                 return -1;
             }
-            snprintf(user->seat, 16, "%d-%d", room, seat);
+             snprintf(user->seat, 128, "{\"room\":%d,\"seat\":%d}", room, seat);
             addStatistic(statistic, room, seat, time(NULL), user->name);
             return 0;
         }
@@ -1015,7 +1014,7 @@ __declspec(dllexport) int cancelReservation(Seat** head, User* user) {
         return -1;
     }
     int room, seat;
-    if (sscanf(user->seat, "%d-%d", &room, &seat) != 2) {
+    if (sscanf(user->seat, "{\"room\":%d,\"seat\":%d}", &room, &seat) != 2) {
         return -1;
     }
     Seat* temp = *head;
@@ -1051,11 +1050,7 @@ __declspec(dllexport) char* getUserInfo(const User* user) {
     cJSON_AddStringToObject(userObject, "name", temp->name);
     cJSON_AddStringToObject(userObject, "email", temp->email);
     cJSON_AddNumberToObject(userObject, "isAdmin", temp->isAdmin);
-    if (temp->seat != NULL) {
-        cJSON_AddStringToObject(userObject, "seat", temp->seat);
-    } else {
-        cJSON_AddNullToObject(userObject, "seat");
-    }
+    cJSON_AddStringToObject(userObject, "seat", temp->seat ? temp->seat : "");
     char* jsonString = cJSON_PrintUnformatted(userObject);
     cJSON_Delete(userObject);
     return jsonString;
