@@ -378,7 +378,7 @@ __declspec(dllexport) int deleteUser(User** user, const char* email, const char*
  * @param email 用户邮箱
  * @return NULL表示未找到或者不是管理员，返回JSON格式的字符串
  */
-__declspec(dllexport) char* returnAllUser(User** user, const char* email) {
+    __declspec(dllexport) char* returnAllUser(User** user, const char* email) {
     if (user == NULL || *user == NULL || email == NULL) {
         return NULL;
     }
@@ -547,15 +547,16 @@ __declspec(dllexport) int addStatistic(Statistic** head, const int room, const i
  * @param head Statistic链表头指针
  * @param room 房间号
  * @param seat 座位号
+ * @param time 时间
  * @return 0表示成功，-1表示失败(统计节点不存在或链表为空)
  */
-__declspec(dllexport) int deleteStatistic(Statistic** head, const int room, const int seat) {
+__declspec(dllexport) int deleteStatistic(Statistic** head, const int room, const int seat, const time_t time) {
     if (head == NULL || *head == NULL) {
         return -1;
     }
     Statistic* temp = *head;
     Statistic* prev = NULL;
-    while (temp != NULL && (temp->room != room || temp->seat != seat)) {
+    while (temp != NULL && (temp->room != room || temp->seat != seat || *temp->time != time)) {
         prev = temp;
         temp = temp->next;
     }
