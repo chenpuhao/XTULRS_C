@@ -448,19 +448,15 @@ __declspec(dllexport) int changeUsername(User** user, const char* name, const ch
  * @param password 用户密码
  * @return 0表示成功，-1表示失败(用户不存在或链表为空)
  */
-__declspec(dllexport) int changePassword(User* user, const char* email, const char* password) {
+__declspec(dllexport) int changePassword(User** user, const char* email, const char* password) {
     if (user == NULL || password == NULL || email == NULL) {
         return -1;
     }
-    User* temp = user;
+    User* temp = *user;
     while (temp != NULL) {
         if (strcmp(temp->email, email) == 0) {
-            char* newPassword = strdup(password);
-            if (!newPassword) {
-                return -1; // 内存分配失败
-            }
             free(temp->password);
-            temp->password = newPassword;
+            temp->password = strdup(password);
             return 0;
         }
         temp = temp->next;
