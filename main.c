@@ -980,7 +980,7 @@ __declspec(dllexport) User* login(User** user, const char* email, const char* pa
  * @param statistic 统计链表头指针
  * @return 0表示成功，-1表示失败(座位已被预约或用户不存在)
  */
-__declspec(dllexport) int reserveSeat(Seat** head,const int room, const int seat, User* user,Statistic** statistic) {
+__declspec(dllexport) int reserveSeat(Seat** head, const int room, const int seat, User* user, Statistic** statistic) {
     if (user->seat != NULL) {
         return -1;
     }
@@ -991,11 +991,11 @@ __declspec(dllexport) int reserveSeat(Seat** head,const int room, const int seat
                 return -1;
             }
             temp->isOccupied = 1;
-            user->seat = malloc(128);
+            user->seat = malloc(16); // 分配足够的空间保存 "房间号-座位号"
             if (!user->seat) {
                 return -1;
             }
-            snprintf(user->seat, 128, "{\"room\":%d,\"seat\":%d}", room, seat);
+            snprintf(user->seat, 16, "%d-%d", room, seat);
             addStatistic(statistic, room, seat, time(NULL), user->name);
             return 0;
         }
@@ -1003,16 +1003,19 @@ __declspec(dllexport) int reserveSeat(Seat** head,const int room, const int seat
     }
     return -1;
 }
+
 /**
  * 取消预约座位
  * @param head Seat链表头指针
- * @param room 房间号
- * @param seat 座位号
  * @param user 用户指针
  * @return 0表示成功，-1表示失败(座位未被预约或用户未预约座位)
  */
-__declspec(dllexport) int cancelReservation(Seat** head,const int room, const int seat, User* user) {
-    if (user->seat != NULL) {
+__declspec(dllexport) int cancelReservation(Seat** head, User* user) {
+    if (user->seat == NULL) {
+        return -1;
+    }
+    int room, seat;
+    if (sscanf(user->seat, "%d-%d", &room, &seat) != 2) {
         return -1;
     }
     Seat* temp = *head;
