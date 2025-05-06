@@ -219,11 +219,8 @@ __declspec(dllexport) char* returnAllSeats(Seat** head) {
         cJSON_AddItemToArray(seatsArray, seatObject);
         temp = temp->next;
     }
-    char* jsonString = cJSON_Print(seatsArray);
+    char* jsonString = cJSON_PrintUnformatted(seatsArray);
     cJSON_Delete(seatsArray);
-    if (!jsonString) {
-        return NULL;
-    }
     return jsonString;
 }
 
@@ -375,7 +372,7 @@ __declspec(dllexport) char* returnAllUser(User** user, const char* email) {
         cJSON_AddItemToArray(usersArray, userObject);
         temp = temp->next;
     }
-    char* jsonString = cJSON_Print(usersArray);
+    char* jsonString = cJSON_PrintUnformatted(usersArray);
     cJSON_Delete(usersArray);
     if (!jsonString) {
         return NULL;
@@ -575,7 +572,7 @@ __declspec(dllexport) char* returnAllStatistic(Statistic** head, User** user) {
         cJSON_AddItemToArray(statisticsArray, statisticObject);
         temp = temp->next;
     }
-    char* jsonString = cJSON_Print(statisticsArray);
+    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
     cJSON_Delete(statisticsArray);
     if (!jsonString) {
         return NULL;
