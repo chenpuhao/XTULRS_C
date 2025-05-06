@@ -39,6 +39,17 @@ typedef struct Statistics {
 } Statistic;
 
 /**
+ * 返回一个新的座位链表头指针
+ * @return 新的座位链表头指针
+ */
+__declspec(dllexport) Seat** getSeatHead() {
+    Seat** head = malloc(sizeof(Seat*));
+    *head = NULL;
+    return head;
+}
+
+
+/**
  *添加一个新的座位
  * @param head Seat链表头指针
  * @param room 房间号
@@ -227,6 +238,16 @@ __declspec(dllexport) void freeSeat(Seat** head) {
         free(temp);
         temp = next;
     }
+}
+
+/**
+ * 返回一个新的用户链表头指针
+ * @return 新的用户链表头指针
+ */
+__declspec(dllexport) User** getUserHead() {
+    User** head = malloc(sizeof(User*));
+    *head = NULL;
+    return head;
 }
 
 /**
@@ -426,6 +447,16 @@ __declspec(dllexport) void freeUser(User** user) {
         free(temp);
         temp = next;
     }
+}
+
+/**
+ * 返回一个新的统计链表头指针
+ * @return 新的统计链表头指针
+ */
+__declspec(dllexport) Statistic** getStatisticHead() {
+    Statistic** head = malloc(sizeof(Statistic*));
+    *head = NULL;
+    return head;
 }
 
 /**
