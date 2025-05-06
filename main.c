@@ -120,7 +120,7 @@ __declspec(dllexport) int removeSeat(Seat** head, const int room, const int seat
 }
 
 /**
- * 通过座位号查找座位
+ * 通过房间号查找座位
  * @param head Seat链表头指针
  * @param room 房间号
  * @return NULL表示未找到，返回JSON格式的字符串
@@ -136,6 +136,43 @@ __declspec(dllexport) char* findSeatByRoom(Seat** head, const int room) {
     const Seat* temp = *head;
     while (temp != NULL) {
         if (temp->room == room) {
+            cJSON* seatObject = cJSON_CreateObject();
+            if (!seatObject) {
+                cJSON_Delete(seatsArray);
+                return NULL;
+            }
+            cJSON_AddNumberToObject(seatObject, "room", temp->room);
+            cJSON_AddNumberToObject(seatObject, "seat", temp->seat);
+            cJSON_AddNumberToObject(seatObject, "isOccupied", temp->isOccupied);
+            cJSON_AddItemToArray(seatsArray, seatObject);
+        }
+        temp = temp->next;
+    }
+    char* jsonString = cJSON_PrintUnformatted(seatsArray);
+    cJSON_Delete(seatsArray);
+    if (!jsonString) {
+        return NULL;
+    }
+    return jsonString;
+}
+
+/**
+ * 通过座位号查找座位
+ * @param head Seat链表头指针
+ * @param seat 座位号
+ * @return NULL表示未找到，返回JSON格式的字符串
+ */
+__declspec(dllexport) char* findSeatBySeat(Seat** head, const int seat) {
+    if (head == NULL || *head == NULL) {
+        return NULL;
+    }
+    cJSON* seatsArray = cJSON_CreateArray();
+    if (!seatsArray) {
+        return NULL;
+    }
+    const Seat* temp = *head;
+    while (temp != NULL) {
+        if (temp->seat == seat) {
             cJSON* seatObject = cJSON_CreateObject();
             if (!seatObject) {
                 cJSON_Delete(seatsArray);
