@@ -1225,6 +1225,28 @@ __declspec(dllexport) int exportSeat(Seat** head, const char* filePath) {
 }
 
 /**
+ * 解除座位预约
+ * @param head Seat链表头指针
+ * @param room 房间号
+ * @param seat 座位号
+ * @return 0表示成功，-1表示失败(座位未被预约或链表为空)
+ */
+__declspec(dllexport) int cancelSeat(Seat** head, const int room, const int seat) {
+    if (head == NULL) {
+        return -1;
+    }
+    Seat* temp = *head;
+    while (temp != NULL) {
+        if (temp->room == room && temp->seat == seat) {
+            temp->isOccupied = 0;
+            return 0;
+        }
+        temp = temp->next;
+    }
+    return -1;
+}
+
+/**
  * 测试函数
  * @return 0
  */
