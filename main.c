@@ -1,6 +1,6 @@
 /**
- * å›¾ä¹¦é¦†é¢„çº¦ç³»ç»Ÿ
- * @author é™ˆæœ´æµ©
+ * Í¼Êé¹ÝÔ¤Ô¼ÏµÍ³
+ * @author ³ÂÆÓºÆ
  * @date 2025/05/05
 **/
 
@@ -11,7 +11,7 @@
 #include <time.h>
 #include "cJSON.h"
 
-//åº§ä½çš„é“¾è¡¨
+//×ùÎ»µÄÁ´±í
 typedef struct Seats {
     int room;
     int seat;
@@ -19,7 +19,7 @@ typedef struct Seats {
     struct Seats* next;
 } Seat;
 
-//ç”¨æˆ·çš„é“¾è¡¨
+//ÓÃ»§µÄÁ´±í
 typedef struct User {
     char* name;
     char* email;
@@ -29,7 +29,7 @@ typedef struct User {
     struct User* next;
 } User;
 
-//ç»Ÿè®¡çš„é“¾è¡¨
+//Í³¼ÆµÄÁ´±í
 typedef struct Statistics {
     int room;
     int seat;
@@ -39,8 +39,8 @@ typedef struct Statistics {
 } Statistic;
 
 /**
- * è¿”å›žä¸€ä¸ªæ–°çš„åº§ä½é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return æ–°çš„åº§ä½é“¾è¡¨å¤´æŒ‡é’ˆ
+ * ·µ»ØÒ»¸öÐÂµÄ×ùÎ»Á´±íÍ·Ö¸Õë
+ * @return ÐÂµÄ×ùÎ»Á´±íÍ·Ö¸Õë
  */
 __declspec(dllexport) Seat** getSeatHead() {
     Seat** head = malloc(sizeof(Seat*));
@@ -50,12 +50,12 @@ __declspec(dllexport) Seat** getSeatHead() {
 
 
 /**
- *æ·»åŠ ä¸€ä¸ªæ–°çš„åº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param room æˆ¿é—´å·
- * @param seat åº§ä½å·
- * @param isOccupied æ˜¯å¦è¢«å ç”¨
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(å†…å­˜ä¸è¶³)
+ *Ìí¼ÓÒ»¸öÐÂµÄ×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param room ·¿¼äºÅ
+ * @param seat ×ùÎ»ºÅ
+ * @param isOccupied ÊÇ·ñ±»Õ¼ÓÃ
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÄÚ´æ²»×ã)
  */
 __declspec(dllexport) int addSeat(Seat** head, const int room, const int seat, const int isOccupied) {
     if (head == NULL) {
@@ -91,11 +91,11 @@ __declspec(dllexport) int addSeat(Seat** head, const int room, const int seat, c
 }
 
 /**
- * åˆ é™¤ä¸€ä¸ªåº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param room æˆ¿é—´å·
- * @param seat åº§ä½å·
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(åº§ä½ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * É¾³ýÒ»¸ö×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param room ·¿¼äºÅ
+ * @param seat ×ùÎ»ºÅ
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(×ùÎ»²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int removeSeat(Seat** head, const int room, const int seat) {
     if (head == NULL || *head == NULL) {
@@ -120,10 +120,10 @@ __declspec(dllexport) int removeSeat(Seat** head, const int room, const int seat
 }
 
 /**
- * é€šè¿‡æˆ¿é—´å·æŸ¥æ‰¾åº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param room æˆ¿é—´å·
- * @return NULLè¡¨ç¤ºæœªæ‰¾åˆ°ï¼Œè¿”å›žJSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * Í¨¹ý·¿¼äºÅ²éÕÒ×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param room ·¿¼äºÅ
+ * @return NULL±íÊ¾Î´ÕÒµ½£¬·µ»ØJSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* findSeatByRoom(Seat** head, const int room) {
     if (head == NULL || *head == NULL) {
@@ -157,10 +157,10 @@ __declspec(dllexport) char* findSeatByRoom(Seat** head, const int room) {
 }
 
 /**
- * é€šè¿‡åº§ä½å·æŸ¥æ‰¾åº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param seat åº§ä½å·
- * @return NULLè¡¨ç¤ºæœªæ‰¾åˆ°ï¼Œè¿”å›žJSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * Í¨¹ý×ùÎ»ºÅ²éÕÒ×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param seat ×ùÎ»ºÅ
+ * @return NULL±íÊ¾Î´ÕÒµ½£¬·µ»ØJSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* findSeatBySeat(Seat** head, const int seat) {
     if (head == NULL || *head == NULL) {
@@ -194,10 +194,10 @@ __declspec(dllexport) char* findSeatBySeat(Seat** head, const int seat) {
 }
 
 /**
- * é€šè¿‡æ˜¯å¦è¢«é¢„çº¦æŸ¥æ‰¾åº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param isOccupied æ˜¯å¦è¢«é¢„çº¦
- * @return NULLè¡¨ç¤ºæœªæ‰¾åˆ°ï¼Œè¿”å›žJSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * Í¨¹ýÊÇ·ñ±»Ô¤Ô¼²éÕÒ×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param isOccupied ÊÇ·ñ±»Ô¤Ô¼
+ * @return NULL±íÊ¾Î´ÕÒµ½£¬·µ»ØJSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* findSeatByIsOccupied(Seat** head, const int isOccupied) {
     if (head == NULL || *head == NULL) {
@@ -231,9 +231,9 @@ __declspec(dllexport) char* findSeatByIsOccupied(Seat** head, const int isOccupi
 }
 
 /**
- * è¿”å›žæ‰€æœ‰åº§ä½ä¿¡æ¯
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @return NULLè¡¨ç¤ºæœªæ‰¾åˆ°ï¼Œè¿”å›žJSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * ·µ»ØËùÓÐ×ùÎ»ÐÅÏ¢
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @return NULL±íÊ¾Î´ÕÒµ½£¬·µ»ØJSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* returnAllSeats(Seat** head) {
     if (head == NULL || *head == NULL) {
@@ -262,8 +262,8 @@ __declspec(dllexport) char* returnAllSeats(Seat** head) {
 }
 
 /**
- * é‡Šæ”¾åº§ä½é“¾è¡¨
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
+ * ÊÍ·Å×ùÎ»Á´±í
+ * @param head SeatÁ´±íÍ·Ö¸Õë
  */
 __declspec(dllexport) void freeSeat(Seat** head) {
     Seat* temp = *head;
@@ -275,8 +275,8 @@ __declspec(dllexport) void freeSeat(Seat** head) {
 }
 
 /**
- * è¿”å›žä¸€ä¸ªæ–°çš„ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return æ–°çš„ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
+ * ·µ»ØÒ»¸öÐÂµÄÓÃ»§Á´±íÍ·Ö¸Õë
+ * @return ÐÂµÄÓÃ»§Á´±íÍ·Ö¸Õë
  */
 __declspec(dllexport) User** getUserHead() {
     User** head = malloc(sizeof(User*));
@@ -285,14 +285,14 @@ __declspec(dllexport) User** getUserHead() {
 }
 
 /**
- * æ–°å¢žä¸€ä¸ªç”¨æˆ·
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param name ç”¨æˆ·å
- * @param email é‚®ç®±
- * @param password å¯†ç 
- * @param isAdmin æ˜¯å¦ä¸ºç®¡ç†å‘˜
- * @param seat åº§ä½å·
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(å†…å­˜ä¸è¶³)
+ * ÐÂÔöÒ»¸öÓÃ»§
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param name ÓÃ»§Ãû
+ * @param email ÓÊÏä
+ * @param password ÃÜÂë
+ * @param isAdmin ÊÇ·ñÎª¹ÜÀíÔ±
+ * @param seat ×ùÎ»ºÅ
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÄÚ´æ²»×ã)
  */
 __declspec(dllexport) int addUser(User** user, const char* name, const char* email, const char* password, const int isAdmin, char* seat) {
     if (user == NULL || name == NULL || email == NULL || password == NULL || (isAdmin != 0 && isAdmin != 1)) {
@@ -342,11 +342,11 @@ __declspec(dllexport) int addUser(User** user, const char* name, const char* ema
 }
 
 /**
- * åˆ é™¤ç”¨æˆ·
- * @param user Useré“¾è¡¨å¤´æŒ‡é’ˆ
- * @param email ç”¨æˆ·é‚®ç®±
- * @param password ç”¨æˆ·å¯†ç 
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(ç”¨æˆ·ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * É¾³ýÓÃ»§
+ * @param user UserÁ´±íÍ·Ö¸Õë
+ * @param email ÓÃ»§ÓÊÏä
+ * @param password ÓÃ»§ÃÜÂë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÓÃ»§²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int deleteUser(User** user, const char* email, const char* password) {
     if (user == NULL || *user == NULL || email == NULL || password == NULL) {
@@ -374,32 +374,32 @@ __declspec(dllexport) int deleteUser(User** user, const char* email, const char*
 }
 
 /**
- * è¿”å›žæ‰€æœ‰ç”¨æˆ·
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param email ç”¨æˆ·é‚®ç®±
- * @return NULLè¡¨ç¤ºæœªæ‰¾åˆ°æˆ–è€…ä¸æ˜¯ç®¡ç†å‘˜ï¼Œè¿”å›žJSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * ·µ»ØËùÓÐÓÃ»§
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param email ÓÃ»§ÓÊÏä
+ * @return NULL±íÊ¾Î´ÕÒµ½»òÕß²»ÊÇ¹ÜÀíÔ±£¬·µ»ØJSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* returnAllUser(User** user, const char* email) {
     if (user == NULL || *user == NULL || email == NULL) {
         return NULL;
     }
 
-    // éªŒè¯æ˜¯å¦ä¸ºç®¡ç†å‘˜ç”¨æˆ·
+    // ÑéÖ¤ÊÇ·ñÎª¹ÜÀíÔ±ÓÃ»§
     const User* current = *user;
     while (current != NULL) {
         if (strcmp(current->email, email) == 0) {
             if (!current->isAdmin) {
-                return NULL; // éžç®¡ç†å‘˜ç”¨æˆ·æ— æƒé™
+                return NULL; // ·Ç¹ÜÀíÔ±ÓÃ»§ÎÞÈ¨ÏÞ
             }
             break;
         }
         current = current->next;
     }
     if (current == NULL) {
-        return NULL; // æœªæ‰¾åˆ°æŒ‡å®šé‚®ç®±çš„ç”¨æˆ·
+        return NULL; // Î´ÕÒµ½Ö¸¶¨ÓÊÏäµÄÓÃ»§
     }
 
-    // åˆ›å»º JSON æ•°ç»„
+    // ´´½¨ JSON Êý×é
     cJSON* usersArray = cJSON_CreateArray();
     if (!usersArray) {
         return NULL;
@@ -433,11 +433,11 @@ __declspec(dllexport) char* returnAllUser(User** user, const char* email) {
 }
 
 /**
- * ä¿®æ”¹ç”¨æˆ·å
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param name ç”¨æˆ·å
- * @param email é‚®ç®±
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(ç”¨æˆ·ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * ÐÞ¸ÄÓÃ»§Ãû
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param name ÓÃ»§Ãû
+ * @param email ÓÊÏä
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÓÃ»§²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int changeUsername(User** user, const char* name, const char* email) {
     if (user == NULL || name == NULL || email == NULL) {
@@ -456,11 +456,11 @@ __declspec(dllexport) int changeUsername(User** user, const char* name, const ch
 }
 
 /**
- * ä¿®æ”¹å¯†ç 
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param email ç”¨æˆ·é‚®ç®±
- * @param password ç”¨æˆ·å¯†ç 
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(ç”¨æˆ·ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * ÐÞ¸ÄÃÜÂë
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param email ÓÃ»§ÓÊÏä
+ * @param password ÓÃ»§ÃÜÂë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÓÃ»§²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int changePassword(User** user, const char* email, const char* password) {
     if (user == NULL || password == NULL || email == NULL) {
@@ -479,8 +479,8 @@ __declspec(dllexport) int changePassword(User** user, const char* email, const c
 }
 
 /**
- * é‡Šæ”¾ç”¨æˆ·é“¾è¡¨
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
+ * ÊÍ·ÅÓÃ»§Á´±í
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
  */
 __declspec(dllexport) void freeUser(User** user) {
     User* temp = *user;
@@ -495,8 +495,8 @@ __declspec(dllexport) void freeUser(User** user) {
 }
 
 /**
- * è¿”å›žä¸€ä¸ªæ–°çš„ç»Ÿè®¡é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return æ–°çš„ç»Ÿè®¡é“¾è¡¨å¤´æŒ‡é’ˆ
+ * ·µ»ØÒ»¸öÐÂµÄÍ³¼ÆÁ´±íÍ·Ö¸Õë
+ * @return ÐÂµÄÍ³¼ÆÁ´±íÍ·Ö¸Õë
  */
 __declspec(dllexport) Statistic** getStatisticHead() {
     Statistic** head = malloc(sizeof(Statistic*));
@@ -505,13 +505,13 @@ __declspec(dllexport) Statistic** getStatisticHead() {
 }
 
 /**
- * æ·»åŠ ä¸€ä¸ªæ–°çš„ç»Ÿè®¡èŠ‚ç‚¹
- * @param head Statisticé“¾è¡¨å¤´æŒ‡é’ˆ
- * @param room æˆ¿é—´å·
- * @param seat åº§ä½å·
- * @param time æ—¶é—´
- * @param user ç”¨æˆ·
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * Ìí¼ÓÒ»¸öÐÂµÄÍ³¼Æ½Úµã
+ * @param head StatisticÁ´±íÍ·Ö¸Õë
+ * @param room ·¿¼äºÅ
+ * @param seat ×ùÎ»ºÅ
+ * @param time Ê±¼ä
+ * @param user ÓÃ»§
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int addStatistic(Statistic** head, const int room, const int seat, const time_t time, const char* user) {
     if (head == NULL || user == NULL) {
@@ -554,12 +554,12 @@ __declspec(dllexport) int addStatistic(Statistic** head, const int room, const i
 }
 
 /**
- * åˆ é™¤ä¸€ä¸ªç»Ÿè®¡èŠ‚ç‚¹
- * @param head Statisticé“¾è¡¨å¤´æŒ‡é’ˆ
- * @param room æˆ¿é—´å·
- * @param seat åº§ä½å·
- * @param time æ—¶é—´
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(ç»Ÿè®¡èŠ‚ç‚¹ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * É¾³ýÒ»¸öÍ³¼Æ½Úµã
+ * @param head StatisticÁ´±íÍ·Ö¸Õë
+ * @param room ·¿¼äºÅ
+ * @param seat ×ùÎ»ºÅ
+ * @param time Ê±¼ä
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(Í³¼Æ½Úµã²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int deleteStatistic(Statistic** head, const int room, const int seat, const time_t time) {
     if (head == NULL || *head == NULL) {
@@ -586,10 +586,10 @@ __declspec(dllexport) int deleteStatistic(Statistic** head, const int room, cons
 }
 
 /**
- * è¿”å›žæ‰€æœ‰ç»Ÿè®¡ä¿¡æ¯
- * @param head Statisticé“¾è¡¨å¤´æŒ‡é’ˆ
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return NULLè¡¨ç¤ºæœªæ‰¾åˆ°ï¼Œè¿”å›žJSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * ·µ»ØËùÓÐÍ³¼ÆÐÅÏ¢
+ * @param head StatisticÁ´±íÍ·Ö¸Õë
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @return NULL±íÊ¾Î´ÕÒµ½£¬·µ»ØJSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* returnAllStatistic(Statistic** head, User* user) {
     if (head == NULL || *head == NULL || user == NULL) {
@@ -629,8 +629,8 @@ __declspec(dllexport) char* returnAllStatistic(Statistic** head, User* user) {
     return jsonString;
 }
 /**
- * é‡Šæ”¾ç»Ÿè®¡é“¾è¡¨
- * @param head Statisticé“¾è¡¨å¤´æŒ‡é’ˆ
+ * ÊÍ·ÅÍ³¼ÆÁ´±í
+ * @param head StatisticÁ´±íÍ·Ö¸Õë
  */
 __declspec(dllexport) void freeStatistic(Statistic** head) {
     Statistic* temp = *head;
@@ -644,9 +644,9 @@ __declspec(dllexport) void freeStatistic(Statistic** head) {
 }
 
 /**
- * ä¿å­˜åº§ä½ä¿¡æ¯åˆ°æ–‡ä»¶
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * ±£´æ×ùÎ»ÐÅÏ¢µ½ÎÄ¼þ
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int saveSeats(Seat** head) {
     if (head == NULL) {
@@ -692,9 +692,9 @@ __declspec(dllexport) int saveSeats(Seat** head) {
     return 0;
 }
 /**
- * ä¿å­˜ç”¨æˆ·ä¿¡æ¯åˆ°æ–‡ä»¶
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * ±£´æÓÃ»§ÐÅÏ¢µ½ÎÄ¼þ
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int saveUser(User** user) {
     if (user == NULL) {
@@ -746,9 +746,9 @@ __declspec(dllexport) int saveUser(User** user) {
 }
 
 /**
- * ä¿å­˜ç»Ÿè®¡ä¿¡æ¯åˆ°æ–‡ä»¶
- * @param head Statisticé“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * ±£´æÍ³¼ÆÐÅÏ¢µ½ÎÄ¼þ
+ * @param head StatisticÁ´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int saveStatistic(Statistic** head) {
     if (head == NULL) {
@@ -797,9 +797,9 @@ __declspec(dllexport) int saveStatistic(Statistic** head) {
 }
 
 /**
- * ä»Žæ–‡ä»¶åŠ è½½åº§ä½ä¿¡æ¯
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * ´ÓÎÄ¼þ¼ÓÔØ×ùÎ»ÐÅÏ¢
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int loadSeat(Seat** head) {
     if (head == NULL) {
@@ -845,9 +845,9 @@ __declspec(dllexport) int loadSeat(Seat** head) {
 }
 
 /**
- * ä»Žæ–‡ä»¶åŠ è½½ç”¨æˆ·ä¿¡æ¯
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * ´ÓÎÄ¼þ¼ÓÔØÓÃ»§ÐÅÏ¢
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int loadUser(User** user) {
     if (user == NULL) {
@@ -903,9 +903,9 @@ __declspec(dllexport) int loadUser(User** user) {
 }
 
 /**
- * ä»Žæ–‡ä»¶åŠ è½½ç»Ÿè®¡ä¿¡æ¯
- * @param head Statisticé“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥
+ * ´ÓÎÄ¼þ¼ÓÔØÍ³¼ÆÐÅÏ¢
+ * @param head StatisticÁ´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
  */
 __declspec(dllexport) int loadStatistic(Statistic** head) {
     if (head == NULL) {
@@ -960,11 +960,11 @@ __declspec(dllexport) int loadStatistic(Statistic** head) {
 }
 
 /**
- * ç™»å½•
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param email é‚®ç®±
- * @param password å¯†ç 
- * @return ç”¨æˆ·æŒ‡é’ˆ
+ * µÇÂ¼
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param email ÓÊÏä
+ * @param password ÃÜÂë
+ * @return ÓÃ»§Ö¸Õë
  */
 __declspec(dllexport) User* login(User** user, const char* email, const char* password) {
     if (user == NULL || *user == NULL || email == NULL || password == NULL) {
@@ -981,13 +981,13 @@ __declspec(dllexport) User* login(User** user, const char* email, const char* pa
 }
 
 /**
- * é¢„çº¦åº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param room æˆ¿é—´å·
- * @param seat åº§ä½å·
- * @param user ç”¨æˆ·æŒ‡é’ˆ
- * @param statistic ç»Ÿè®¡é“¾è¡¨å¤´æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(åº§ä½å·²è¢«é¢„çº¦æˆ–ç”¨æˆ·ä¸å­˜åœ¨)
+ * Ô¤Ô¼×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param room ·¿¼äºÅ
+ * @param seat ×ùÎ»ºÅ
+ * @param user ÓÃ»§Ö¸Õë
+ * @param statistic Í³¼ÆÁ´±íÍ·Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(×ùÎ»ÒÑ±»Ô¤Ô¼»òÓÃ»§²»´æÔÚ)
  */
 __declspec(dllexport) int reserveSeat(Seat** head, const int room, const int seat, User* user, Statistic** statistic) {
     if (user->seat != NULL) {
@@ -1000,7 +1000,7 @@ __declspec(dllexport) int reserveSeat(Seat** head, const int room, const int sea
                 return -1;
             }
             temp->isOccupied = 1;
-            user->seat = malloc(16); // åˆ†é…è¶³å¤Ÿçš„ç©ºé—´ä¿å­˜ "æˆ¿é—´å·-åº§ä½å·"
+            user->seat = malloc(16);
             if (!user->seat) {
                 return -1;
             }
@@ -1014,10 +1014,10 @@ __declspec(dllexport) int reserveSeat(Seat** head, const int room, const int sea
 }
 
 /**
- * å–æ¶ˆé¢„çº¦åº§ä½
- * @param head Seaté“¾è¡¨å¤´æŒ‡é’ˆ
- * @param user ç”¨æˆ·æŒ‡é’ˆ
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(åº§ä½æœªè¢«é¢„çº¦æˆ–ç”¨æˆ·æœªé¢„çº¦åº§ä½)
+ * È¡ÏûÔ¤Ô¼×ùÎ»
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param user ÓÃ»§Ö¸Õë
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(×ùÎ»Î´±»Ô¤Ô¼»òÓÃ»§Î´Ô¤Ô¼×ùÎ»)
  */
 __declspec(dllexport) int cancelReservation(Seat** head, User* user) {
     if (user->seat == NULL) {
@@ -1044,9 +1044,9 @@ __declspec(dllexport) int cancelReservation(Seat** head, User* user) {
 }
 
 /**
- * èŽ·å–ç”¨æˆ·ä¿¡æ¯
- * @param user ç”¨æˆ·æŒ‡é’ˆ
- * @return JSONæ ¼å¼çš„å­—ç¬¦ä¸²
+ * »ñÈ¡ÓÃ»§ÐÅÏ¢
+ * @param user ÓÃ»§Ö¸Õë
+ * @return JSON¸ñÊ½µÄ×Ö·û´®
  */
 __declspec(dllexport) char* getUserInfo(const User* user) {
     if (user == NULL ) {
@@ -1067,49 +1067,165 @@ __declspec(dllexport) char* getUserInfo(const User* user) {
 }
 
 /**
- * å°†ç”¨æˆ·è®¾ç½®ä¸ºç®¡ç†å‘˜
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param email ç”¨æˆ·é‚®ç®±
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(ç”¨æˆ·ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * ½«ÓÃ»§ÉèÖÃÎª¹ÜÀíÔ±
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param email ÓÃ»§ÓÊÏä
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÓÃ»§²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int setAsAdmin(User** user, const char* email) {
     if (user == NULL || email == NULL) {
-        return -1; // å‚æ•°æ— æ•ˆ
+        return -1;
     }
     User* temp = *user;
     while (temp != NULL) {
         if (strcmp(temp->email, email) == 0) {
             temp->isAdmin = 1;
-            return 0; // æˆåŠŸ
+            return 0;
         }
         temp = temp->next;
     }
-    return -1; // æœªæ‰¾åˆ°ç”¨æˆ·
+    return -1;
 }
 
 /**
- * å°†ç”¨æˆ·è®¾ç½®ä¸ºæ™®é€šç”¨æˆ·
- * @param user ç”¨æˆ·é“¾è¡¨å¤´æŒ‡é’ˆ
- * @param email ç”¨æˆ·é‚®ç®±
- * @return 0è¡¨ç¤ºæˆåŠŸï¼Œ-1è¡¨ç¤ºå¤±è´¥(ç”¨æˆ·ä¸å­˜åœ¨æˆ–é“¾è¡¨ä¸ºç©º)
+ * ½«ÓÃ»§ÉèÖÃÎªÆÕÍ¨ÓÃ»§
+ * @param user ÓÃ»§Á´±íÍ·Ö¸Õë
+ * @param email ÓÃ»§ÓÊÏä
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü(ÓÃ»§²»´æÔÚ»òÁ´±íÎª¿Õ)
  */
 __declspec(dllexport) int setAsUser(User** user, const char* email) {
     if (user == NULL || email == NULL) {
-        return -1; // å‚æ•°æ— æ•ˆ
+        return -1; // ²ÎÊýÎÞÐ§
     }
     User* temp = *user;
     while (temp != NULL) {
         if (strcmp(temp->email, email) == 0) {
             temp->isAdmin = 0;
-            return 0; // æˆåŠŸ
+            return 0; // ³É¹¦
         }
         temp = temp->next;
     }
-    return -1; // æœªæ‰¾åˆ°ç”¨æˆ·
+    return -1; // Î´ÕÒµ½ÓÃ»§
 }
 
 /**
- * æµ‹è¯•å‡½æ•°
+ * µ¼Èë×ùÎ»ÐÅÏ¢
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param seatJson ×ùÎ»ÐÅÏ¢µÄJSON×Ö·û´®
+ * @return JSON¸ñÊ½µÄ×Ö·û´®£¬°üº¬Ìí¼Ó³É¹¦ºÍÊ§°ÜµÄÊýÁ¿
+ */
+__declspec(dllexport) char* importSeat(Seat** head, const char* seatJson) {
+    if (head == NULL || seatJson == NULL) {
+        return strdup("Ìí¼Ó³É¹¦:0,Ìí¼ÓÊ§°Ü:0,Ô­Òò:²ÎÊýÎÞÐ§");
+    }
+
+    cJSON* root = cJSON_Parse(seatJson);
+    if (!root) {
+        return strdup("Ìí¼Ó³É¹¦:0,Ìí¼ÓÊ§°Ü:0,Ô­Òò:JSON½âÎöÊ§°Ü");
+    }
+
+    const cJSON* seatsArray = cJSON_GetObjectItem(root, "seats");
+    if (!cJSON_IsArray(seatsArray)) {
+        cJSON_Delete(root);
+        return strdup("Ìí¼Ó³É¹¦:0,Ìí¼ÓÊ§°Ü:0,Ô­Òò:JSON¸ñÊ½´íÎó");
+    }
+
+    int successCount = 0;
+    int failureCount = 0;
+
+    cJSON* seatItem;
+    cJSON_ArrayForEach(seatItem, seatsArray) {
+        const cJSON* room = cJSON_GetObjectItem(seatItem, "room");
+        const cJSON* seat = cJSON_GetObjectItem(seatItem, "seat");
+        const cJSON* isOccupied = cJSON_GetObjectItem(seatItem, "isOccupied");
+        if (!cJSON_IsNumber(room) || !cJSON_IsNumber(seat)|| !cJSON_IsNumber(isOccupied)) {
+            failureCount++;
+            continue;
+        }
+
+        const Seat* temp = *head;
+        int exists = 0;
+        while (temp != NULL) {
+            if (temp->room == room->valueint && temp->seat == seat->valueint ) {
+                exists = 1;
+                break;
+            }
+            temp = temp->next;
+        }
+
+        if (exists) {
+            failureCount++;
+            continue;
+        }
+
+        if (addSeat(head, room->valueint, seat->valueint, isOccupied->valueint) == 0) {
+            successCount++;
+        } else {
+            failureCount++;
+        }
+    }
+
+    cJSON_Delete(root);
+
+    char result[128];
+    snprintf(result, sizeof(result), "Ìí¼Ó³É¹¦:%d,Ìí¼ÓÊ§°Ü:%d,Ô­Òò:%s",
+             successCount, failureCount, failureCount > 0 ? "²¿·Ö×ùÎ»ÒÑ´æÔÚ»òÌí¼ÓÊ§°Ü" : "ÎÞ");
+
+    return strdup(result);
+}
+
+/**
+ * µ¼³ö×ùÎ»ÐÅÏ¢µ½ÎÄ¼þ
+ * @param head SeatÁ´±íÍ·Ö¸Õë
+ * @param filePath ÎÄ¼þÂ·¾¶
+ * @return 0±íÊ¾³É¹¦£¬-1±íÊ¾Ê§°Ü
+ */
+__declspec(dllexport) int exportSeat(Seat** head, const char* filePath) {
+    if (head == NULL || filePath == NULL) {
+        return -1;
+    }
+    cJSON* root = cJSON_CreateObject();
+    if (!root) {
+        return -1;
+    }
+    cJSON* seatsArray = cJSON_CreateArray();
+    if (!seatsArray) {
+        cJSON_Delete(root);
+        return -1;
+    }
+    cJSON_AddItemToObject(root, "seats", seatsArray);
+    const Seat* temp = *head;
+    while (temp != NULL) {
+        cJSON* seatObject = cJSON_CreateObject();
+        if (!seatObject) {
+            cJSON_Delete(root);
+            return -1;
+        }
+        cJSON_AddNumberToObject(seatObject, "room", temp->room);
+        cJSON_AddNumberToObject(seatObject, "seat", temp->seat);
+        cJSON_AddNumberToObject(seatObject, "isOccupied", temp->isOccupied);
+
+        cJSON_AddItemToArray(seatsArray, seatObject);
+        temp = temp->next;
+    }
+    char* jsonString = cJSON_Print(root);
+    cJSON_Delete(root);
+    if (!jsonString) {
+        return -1;
+    }
+    FILE* file = fopen(filePath, "w");
+    if (!file) {
+        free(jsonString);
+        return -1;
+    }
+    fprintf(file, "%s", jsonString);
+    fclose(file);
+    free(jsonString);
+    return 0;
+}
+
+/**
+ * ²âÊÔº¯Êý
  * @return 0
  */
 __declspec(dllexport) int test() {

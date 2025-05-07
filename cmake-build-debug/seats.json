@@ -1,18 +1,18 @@
 {
 	"seats":	[{
-			"room":	101,
+			"room":	103,
 			"seat":	1,
 			"isOccupied":	0
 		}, {
-			"room":	101,
+			"room":	103,
 			"seat":	2,
 			"isOccupied":	1
 		}, {
-			"room":	102,
+			"room":	104,
 			"seat":	1,
 			"isOccupied":	0
 		}, {
-			"room":	102,
+			"room":	104,
 			"seat":	2,
 			"isOccupied":	1
 		}]
