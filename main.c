@@ -561,28 +561,45 @@ __declspec(dllexport) int addStatistic(Statistic** head, const int room, const i
  * @param time 时间
  * @return 0表示成功，-1表示失败(统计节点不存在或链表为空)
  */
-__declspec(dllexport) int deleteStatistic(Statistic** head, const int room, const int seat, const time_t time) {
-    if (head == NULL || *head == NULL) {
+__declspec(dllexport) int deleteStatistic(Statistic** head, const int room, const int seat, const char* time) {
+    if (head == NULL || *head == NULL || time == NULL) {
         return -1;
     }
+
+    // 将时间字符串解析为 time_t
+    struct tm tm = {0};
+    if (sscanf(time, "%d-%d-%d %d:%d:%d",
+               &tm.tm_year, &tm.tm_mon, &tm.tm_mday,
+               &tm.tm_hour, &tm.tm_min, &tm.tm_sec) != 6) {
+        return -1;
+    }
+    tm.tm_year -= 1900;
+    tm.tm_mon -= 1;
+    const time_t parsedTime = mktime(&tm);
+    if (parsedTime == -1) {
+        return -1;
+    }
+
     Statistic* temp = *head;
     Statistic* prev = NULL;
-    while (temp != NULL && (temp->room != room || temp->seat != seat || *temp->time != time)) {
+
+    while (temp != NULL) {
+        if (temp->room == room && temp->seat == seat && *temp->time == parsedTime) {
+            if (prev == NULL) {
+                *head = temp->next;
+            } else {
+                prev->next = temp->next;
+            }
+            free(temp->time);
+            free(temp->user);
+            free(temp);
+            return 0; // 删除成功
+        }
         prev = temp;
         temp = temp->next;
     }
-    if (temp == NULL) {
-        return -1;
-    }
-    if (prev == NULL) {
-        *head = temp->next;
-    } else {
-        prev->next = temp->next;
-    }
-    free(temp->time);
-    free(temp->user);
-    free(temp);
-    return 0;
+
+    return -1; // 未找到匹配的统计信息
 }
 
 /**
@@ -714,17 +731,24 @@ __declspec(dllexport) char* findStatisticBySeat(Statistic** head, const int seat
  * @param time 时间
  * @return NULL表示未找到，返回JSON格式的字符串
  */
-__declspec(dllexport) char* findStatisticByTime(Statistic** head, const time_t time) {
-    if (head == NULL || *head == NULL) {
+__declspec(dllexport) char* findStatisticByTime(Statistic** head, const char* time) {
+    if (head == NULL || *head == NULL || time == NULL) {
         return NULL;
     }
 
-    struct tm inputDate;
-    localtime_s(&inputDate, &time);
+    struct tm inputDate = {0};
+    if (sscanf(time, "%4d-%2d-%2d", &inputDate.tm_year, &inputDate.tm_mon, &inputDate.tm_mday) != 3) {
+        return NULL;
+    }
+    inputDate.tm_year -= 1900;
+    inputDate.tm_mon -= 1;
     inputDate.tm_hour = 0;
     inputDate.tm_min = 0;
     inputDate.tm_sec = 0;
     time_t inputDayStart = mktime(&inputDate);
+    if (inputDayStart == -1) {
+        return NULL;
+    }
 
     cJSON* statisticsArray = cJSON_CreateArray();
     if (!statisticsArray) {
@@ -733,7 +757,6 @@ __declspec(dllexport) char* findStatisticByTime(Statistic** head, const time_t t
 
     const Statistic* temp = *head;
     while (temp != NULL) {
-        // 将链表中的时间转换为日期
         struct tm statDate;
         localtime_s(&statDate, temp->time);
         statDate.tm_hour = 0;
@@ -1434,6 +1457,73 @@ __declspec(dllexport) void clearAllStatistic(Statistic** head) {
         temp = next;
     }
     *head = NULL;
+}
+/**
+ * 通过时间范围查找统计信息
+ * @param head Statistic链表头指针
+ * @param startTime 起始时间
+ * @param endTime 结束时间
+ * @return NULL表示未找到，返回JSON格式的字符串
+ */
+__declspec(dllexport) char* findStatisticByTimeRange(Statistic** head, const char* startTime, const char* endTime) {
+    if (head == NULL || *head == NULL || startTime == NULL || endTime == NULL) {
+        return NULL;
+    }
+
+    struct tm startDate = {0};
+    struct tm endDate = {0};
+    if (sscanf(startTime, "%4d-%2d-%2d", &startDate.tm_year, &startDate.tm_mon, &startDate.tm_mday) != 3 ||
+        sscanf(endTime, "%4d-%2d-%2d", &endDate.tm_year, &endDate.tm_mon, &endDate.tm_mday) != 3) {
+        return NULL; // 时间格式错误
+    }
+    startDate.tm_year -= 1900;
+    startDate.tm_mon -= 1;
+    startDate.tm_hour = 0;
+    startDate.tm_min = 0;
+    startDate.tm_sec = 0;
+    time_t startDayStart = mktime(&startDate);
+    if (startDayStart == -1) {
+        return NULL; // 起始时间解析失败
+    }
+
+    endDate.tm_year -= 1900;
+    endDate.tm_mon -= 1;
+    endDate.tm_hour = 23;
+    endDate.tm_min = 59;
+    endDate.tm_sec = 59;
+    time_t endDayEnd = mktime(&endDate);
+    if (endDayEnd == -1) {
+        return NULL; // 结束时间解析失败
+    }
+
+    cJSON* statisticsArray = cJSON_CreateArray();
+    if (!statisticsArray) {
+        return NULL; // JSON 创建失败
+    }
+
+    const Statistic* temp = *head;
+    while (temp != NULL) {
+        if (*temp->time >= startDayStart && *temp->time <= endDayEnd) {
+            cJSON* statisticObject = cJSON_CreateObject();
+            if (!statisticObject) {
+                cJSON_Delete(statisticsArray);
+                return NULL; // 释放已分配的 JSON 数组
+            }
+            cJSON_AddNumberToObject(statisticObject, "room", temp->room);
+            cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
+            char timeStr[64];
+            if (strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localtime(temp->time))) {
+                cJSON_AddStringToObject(statisticObject, "time", timeStr);
+            }
+            cJSON_AddStringToObject(statisticObject, "user", temp->user);
+            cJSON_AddItemToArray(statisticsArray, statisticObject);
+        }
+        temp = temp->next;
+    }
+
+    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
+    cJSON_Delete(statisticsArray);
+    return jsonString;
 }
 
 /**
