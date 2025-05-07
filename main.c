@@ -628,6 +628,180 @@ __declspec(dllexport) char* returnAllStatistic(Statistic** head, User* user) {
     }
     return jsonString;
 }
+
+/**
+ * 通过房间号查找统计信息
+ * @param head Statistic链表头指针
+ * @param room 房间号
+ * @return NULL表示未找到，返回JSON格式的字符串
+ */
+__declspec(dllexport) char* findStatisticByRoom(Statistic** head, const int room) {
+    if (head == NULL || *head == NULL) {
+        return NULL;
+    }
+    cJSON* statisticsArray = cJSON_CreateArray();
+    if (!statisticsArray) {
+        return NULL;
+    }
+    const Statistic* temp = *head;
+    while (temp != NULL) {
+        if (temp->room == room) {
+            cJSON* statisticObject = cJSON_CreateObject();
+            if (!statisticObject) {
+                cJSON_Delete(statisticsArray);
+                return NULL;
+            }
+            cJSON_AddNumberToObject(statisticObject, "room", temp->room);
+            cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
+            char timeStr[64];
+            strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localtime(temp->time));
+            cJSON_AddStringToObject(statisticObject, "time", timeStr);
+            cJSON_AddStringToObject(statisticObject, "user", temp->user);
+            cJSON_AddItemToArray(statisticsArray, statisticObject);
+        }
+        temp = temp->next;
+    }
+    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
+    cJSON_Delete(statisticsArray);
+    if (!jsonString) {
+        return NULL;
+    }
+    return jsonString;
+}
+
+/**
+ * 通过座位号查找统计信息
+ * @param head Statistic链表头指针
+ * @param seat 座位号
+ * @return NULL表示未找到，返回JSON格式的字符串
+ */
+__declspec(dllexport) char* findStatisticBySeat(Statistic** head, const int seat) {
+    if (head == NULL || *head == NULL) {
+        return NULL;
+    }
+    cJSON* statisticsArray = cJSON_CreateArray();
+    if (!statisticsArray) {
+        return NULL;
+    }
+    const Statistic* temp = *head;
+    while (temp != NULL) {
+        if (temp->seat == seat) {
+            cJSON* statisticObject = cJSON_CreateObject();
+            if (!statisticObject) {
+                cJSON_Delete(statisticsArray);
+                return NULL;
+            }
+            cJSON_AddNumberToObject(statisticObject, "room", temp->room);
+            cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
+            char timeStr[64];
+            strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localtime(temp->time));
+            cJSON_AddStringToObject(statisticObject, "time", timeStr);
+            cJSON_AddStringToObject(statisticObject, "user", temp->user);
+            cJSON_AddItemToArray(statisticsArray, statisticObject);
+        }
+        temp = temp->next;
+    }
+    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
+    cJSON_Delete(statisticsArray);
+    if (!jsonString) {
+        return NULL;
+    }
+    return jsonString;
+}
+/**
+ * 通过时间查找统计信息
+ * @param head Statistic链表头指针
+ * @param time 时间
+ * @return NULL表示未找到，返回JSON格式的字符串
+ */
+__declspec(dllexport) char* findStatisticByTime(Statistic** head, const time_t time) {
+    if (head == NULL || *head == NULL) {
+        return NULL;
+    }
+
+    struct tm inputDate;
+    localtime_s(&inputDate, &time);
+    inputDate.tm_hour = 0;
+    inputDate.tm_min = 0;
+    inputDate.tm_sec = 0;
+    time_t inputDayStart = mktime(&inputDate);
+
+    cJSON* statisticsArray = cJSON_CreateArray();
+    if (!statisticsArray) {
+        return NULL;
+    }
+
+    const Statistic* temp = *head;
+    while (temp != NULL) {
+        // 将链表中的时间转换为日期
+        struct tm statDate;
+        localtime_s(&statDate, temp->time);
+        statDate.tm_hour = 0;
+        statDate.tm_min = 0;
+        statDate.tm_sec = 0;
+        time_t statDayStart = mktime(&statDate);
+
+        if (inputDayStart == statDayStart) {
+            cJSON* statisticObject = cJSON_CreateObject();
+            if (!statisticObject) {
+                cJSON_Delete(statisticsArray);
+                return NULL;
+            }
+            cJSON_AddNumberToObject(statisticObject, "room", temp->room);
+            cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
+            char timeStr[64];
+            strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localtime(temp->time));
+            cJSON_AddStringToObject(statisticObject, "time", timeStr);
+            cJSON_AddStringToObject(statisticObject, "user", temp->user);
+            cJSON_AddItemToArray(statisticsArray, statisticObject);
+        }
+        temp = temp->next;
+    }
+
+    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
+    cJSON_Delete(statisticsArray);
+    return jsonString;
+}
+
+/**
+ * 通过用户查找统计信息
+ * @param head Statistic链表头指针
+ * @param user 用户名
+ * @return NULL表示未找到，返回JSON格式的字符串
+ */
+__declspec(dllexport) char* findStatisticByUser(Statistic** head, const char* user) {
+    if (head == NULL || *head == NULL || user == NULL) {
+        return NULL;
+    }
+    cJSON* statisticsArray = cJSON_CreateArray();
+    if (!statisticsArray) {
+        return NULL;
+    }
+    const Statistic* temp = *head;
+    while (temp != NULL) {
+        if (strcmp(temp->user, user) == 0) {
+            cJSON* statisticObject = cJSON_CreateObject();
+            if (!statisticObject) {
+                cJSON_Delete(statisticsArray);
+                return NULL;
+            }
+            cJSON_AddNumberToObject(statisticObject, "room", temp->room);
+            cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
+            char timeStr[64];
+            strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localtime(temp->time));
+            cJSON_AddStringToObject(statisticObject, "time", timeStr);
+            cJSON_AddStringToObject(statisticObject, "user", temp->user);
+            cJSON_AddItemToArray(statisticsArray, statisticObject);
+        }
+        temp = temp->next;
+    }
+    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
+    cJSON_Delete(statisticsArray);
+    if (!jsonString) {
+        return NULL;
+    }
+    return jsonString;
+}
 /**
  * 释放统计链表
  * @param head Statistic链表头指针
@@ -1244,6 +1418,22 @@ __declspec(dllexport) int cancelSeat(Seat** head, const int room, const int seat
         temp = temp->next;
     }
     return -1;
+}
+
+/**
+ * 清空所有统计信息
+ * @param head Statistic链表头指针
+ */
+__declspec(dllexport) void clearAllStatistic(Statistic** head) {
+    Statistic* temp = *head;
+    while (temp != NULL) {
+        Statistic* next = temp->next;
+        free(temp->time);
+        free(temp->user);
+        free(temp);
+        temp = next;
+    }
+    *head = NULL;
 }
 
 /**
