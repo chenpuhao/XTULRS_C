@@ -11,7 +11,7 @@
 #include <time.h>
 #include "cJSON.h"
 
-//座位的链表
+
 typedef struct Seats {
     int room;
     int seat;
@@ -19,7 +19,7 @@ typedef struct Seats {
     struct Seats* next;
 } Seat;
 
-//用户的链表
+
 typedef struct User {
     char* name;
     char* email;
@@ -29,7 +29,7 @@ typedef struct User {
     struct User* next;
 } User;
 
-//统计的链表
+
 typedef struct Statistics {
     int room;
     int seat;
@@ -384,22 +384,22 @@ __declspec(dllexport) char* returnAllUser(User** user, const char* email) {
         return NULL;
     }
 
-    // 验证是否为管理员用户
+    
     const User* current = *user;
     while (current != NULL) {
         if (strcmp(current->email, email) == 0) {
             if (!current->isAdmin) {
-                return NULL; // 非管理员用户无权限
+                return NULL; 
             }
             break;
         }
         current = current->next;
     }
     if (current == NULL) {
-        return NULL; // 未找到指定邮箱的用户
+        return NULL; 
     }
 
-    // 创建 JSON 数组
+    
     cJSON* usersArray = cJSON_CreateArray();
     if (!usersArray) {
         return NULL;
@@ -566,7 +566,7 @@ __declspec(dllexport) int deleteStatistic(Statistic** head, const int room, cons
         return -1;
     }
 
-    // 将时间字符串解析为 time_t
+    
     struct tm tm = {0};
     if (sscanf(time, "%d-%d-%d %d:%d:%d",
                &tm.tm_year, &tm.tm_mon, &tm.tm_mday,
@@ -593,13 +593,13 @@ __declspec(dllexport) int deleteStatistic(Statistic** head, const int room, cons
             free(temp->time);
             free(temp->user);
             free(temp);
-            return 0; // 删除成功
+            return 0; 
         }
         prev = temp;
         temp = temp->next;
     }
 
-    return -1; // 未找到匹配的统计信息
+    return -1; 
 }
 
 /**
@@ -723,66 +723,6 @@ __declspec(dllexport) char* findStatisticBySeat(Statistic** head, const int seat
     if (!jsonString) {
         return NULL;
     }
-    return jsonString;
-}
-/**
- * 通过时间查找统计信息
- * @param head Statistic链表头指针
- * @param time 时间
- * @return NULL表示未找到，返回JSON格式的字符串
- */
-__declspec(dllexport) char* findStatisticByTime(Statistic** head, const char* time) {
-    if (head == NULL || *head == NULL || time == NULL) {
-        return NULL;
-    }
-
-    struct tm inputDate = {0};
-    if (sscanf(time, "%4d-%2d-%2d", &inputDate.tm_year, &inputDate.tm_mon, &inputDate.tm_mday) != 3) {
-        return NULL;
-    }
-    inputDate.tm_year -= 1900;
-    inputDate.tm_mon -= 1;
-    inputDate.tm_hour = 0;
-    inputDate.tm_min = 0;
-    inputDate.tm_sec = 0;
-    time_t inputDayStart = mktime(&inputDate);
-    if (inputDayStart == -1) {
-        return NULL;
-    }
-
-    cJSON* statisticsArray = cJSON_CreateArray();
-    if (!statisticsArray) {
-        return NULL;
-    }
-
-    const Statistic* temp = *head;
-    while (temp != NULL) {
-        struct tm statDate;
-        localtime_s(&statDate, temp->time);
-        statDate.tm_hour = 0;
-        statDate.tm_min = 0;
-        statDate.tm_sec = 0;
-        time_t statDayStart = mktime(&statDate);
-
-        if (inputDayStart == statDayStart) {
-            cJSON* statisticObject = cJSON_CreateObject();
-            if (!statisticObject) {
-                cJSON_Delete(statisticsArray);
-                return NULL;
-            }
-            cJSON_AddNumberToObject(statisticObject, "room", temp->room);
-            cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
-            char timeStr[64];
-            strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localtime(temp->time));
-            cJSON_AddStringToObject(statisticObject, "time", timeStr);
-            cJSON_AddStringToObject(statisticObject, "user", temp->user);
-            cJSON_AddItemToArray(statisticsArray, statisticObject);
-        }
-        temp = temp->next;
-    }
-
-    char* jsonString = cJSON_PrintUnformatted(statisticsArray);
-    cJSON_Delete(statisticsArray);
     return jsonString;
 }
 
@@ -1292,17 +1232,17 @@ __declspec(dllexport) int setAsAdmin(User** user, const char* email) {
  */
 __declspec(dllexport) int setAsUser(User** user, const char* email) {
     if (user == NULL || email == NULL) {
-        return -1; // 参数无效
+        return -1; 
     }
     User* temp = *user;
     while (temp != NULL) {
         if (strcmp(temp->email, email) == 0) {
             temp->isAdmin = 0;
-            return 0; // 成功
+            return 0; 
         }
         temp = temp->next;
     }
-    return -1; // 未找到用户
+    return -1; 
 }
 
 /**
@@ -1474,7 +1414,7 @@ __declspec(dllexport) char* findStatisticByTimeRange(Statistic** head, const cha
     struct tm endDate = {0};
     if (sscanf(startTime, "%4d-%2d-%2d", &startDate.tm_year, &startDate.tm_mon, &startDate.tm_mday) != 3 ||
         sscanf(endTime, "%4d-%2d-%2d", &endDate.tm_year, &endDate.tm_mon, &endDate.tm_mday) != 3) {
-        return NULL; // 时间格式错误
+        return NULL; 
     }
     startDate.tm_year -= 1900;
     startDate.tm_mon -= 1;
@@ -1483,7 +1423,7 @@ __declspec(dllexport) char* findStatisticByTimeRange(Statistic** head, const cha
     startDate.tm_sec = 0;
     time_t startDayStart = mktime(&startDate);
     if (startDayStart == -1) {
-        return NULL; // 起始时间解析失败
+        return NULL; 
     }
 
     endDate.tm_year -= 1900;
@@ -1493,12 +1433,12 @@ __declspec(dllexport) char* findStatisticByTimeRange(Statistic** head, const cha
     endDate.tm_sec = 59;
     time_t endDayEnd = mktime(&endDate);
     if (endDayEnd == -1) {
-        return NULL; // 结束时间解析失败
+        return NULL; 
     }
 
     cJSON* statisticsArray = cJSON_CreateArray();
     if (!statisticsArray) {
-        return NULL; // JSON 创建失败
+        return NULL; 
     }
 
     const Statistic* temp = *head;
@@ -1507,7 +1447,7 @@ __declspec(dllexport) char* findStatisticByTimeRange(Statistic** head, const cha
             cJSON* statisticObject = cJSON_CreateObject();
             if (!statisticObject) {
                 cJSON_Delete(statisticsArray);
-                return NULL; // 释放已分配的 JSON 数组
+                return NULL; 
             }
             cJSON_AddNumberToObject(statisticObject, "room", temp->room);
             cJSON_AddNumberToObject(statisticObject, "seat", temp->seat);
